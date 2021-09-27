@@ -1,7 +1,6 @@
 package laundry;
 
 public class Transaksi extends Cucian{
-    Member member = new Member();
     private int errorStatus=0;
     private int harga;    
     String proses(String inIdCucian){
@@ -20,9 +19,6 @@ public class Transaksi extends Cucian{
     }
     int getError(){
         return errorStatus;
-    }
-    String memProses(String idInput){
-        return member.usePoin(idInput,this.harga , getBerat());
     }
     String nonMemProses(){
         try{
