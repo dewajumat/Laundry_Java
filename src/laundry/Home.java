@@ -1,13 +1,14 @@
 package laundry;
 //By Kelompok 6
 import java.sql.*;
-import static javax.swing.SwingConstants.*;
+import java.text.SimpleDateFormat;
 import javax.swing.table.DefaultTableModel;
 
 public class Home extends javax.swing.JFrame {
     Sql sql = new Sql();
     Cucian cucian = new Cucian();
     Transaksi transaksi = new Transaksi();
+    SimpleDateFormat date=new SimpleDateFormat("yyyy-MM-dd");
     public Home() {
         initComponents();
         status.setText(sql.stats());
@@ -36,7 +37,6 @@ public class Home extends javax.swing.JFrame {
                 model.addRow(data);
             }
             sql.getHasil().close();
-            tCari.setText("");
         }
         catch(SQLException e)  {
             System.out.println(e);
@@ -81,8 +81,7 @@ public class Home extends javax.swing.JFrame {
         jPanel12 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         table_no = new javax.swing.JTable();
-        jPanel13 = new javax.swing.JPanel();
-        tCari = new javax.swing.JTextField();
+        jDateChooser1 = new com.toedter.calendar.JDateChooser();
         cari = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
 
@@ -506,35 +505,6 @@ public class Home extends javax.swing.JFrame {
             table_no.getColumnModel().getColumn(0).setMaxWidth(100);
         }
 
-        jPanel13.setBackground(new java.awt.Color(105, 117, 146));
-
-        tCari.setBackground(new java.awt.Color(105, 117, 146));
-        tCari.setFont(new java.awt.Font("Microsoft JhengHei UI Light", 1, 18)); // NOI18N
-        tCari.setForeground(new java.awt.Color(255, 255, 255));
-        tCari.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        tCari.setToolTipText("");
-        tCari.setAlignmentY(1.0F);
-        tCari.setBorder(null);
-        tCari.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        tCari.setName(""); // NOI18N
-
-        javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
-        jPanel13.setLayout(jPanel13Layout);
-        jPanel13Layout.setHorizontalGroup(
-            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel13Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(tCari)
-                .addContainerGap())
-        );
-        jPanel13Layout.setVerticalGroup(
-            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel13Layout.createSequentialGroup()
-                .addGap(2, 2, 2)
-                .addComponent(tCari, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(2, 2, 2))
-        );
-
         cari.setBackground(new java.awt.Color(0, 18, 53));
         cari.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/icons8_search_30px.png"))); // NOI18N
         cari.setBorderPainted(false);
@@ -558,10 +528,9 @@ public class Home extends javax.swing.JFrame {
             .addGroup(jPanel12Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(jPanel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(cari, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE))
-                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cari, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jDateChooser1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 432, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(37, Short.MAX_VALUE))
@@ -572,8 +541,8 @@ public class Home extends javax.swing.JFrame {
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel12Layout.createSequentialGroup()
                         .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(cari, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
@@ -675,9 +644,10 @@ public class Home extends javax.swing.JFrame {
 
     private void cariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cariActionPerformed
         try
-        {
-            sql.execute("SELECT `kode`, `tanggal`, `berat` , `biaya` FROM `transaksi` "
-                    + "WHERE tanggal like '%"+tCari.getText()+"%'");           
+        {       
+            System.out.println(date.format(jDateChooser1.getDate()));
+            sql.execute("SELECT `kode`, `tanggal`, `berat`, `biaya` FROM `transaksi` "
+                    + "WHERE tanggal like '%"+date.format(jDateChooser1.getDate())+"%'");           
             DefaultTableModel model = (DefaultTableModel) table_no.getModel();            
             if (table_no.getRowCount() > 0) {
                 for (int i = table_no.getRowCount()-1; i > -1; i--) {
@@ -693,7 +663,6 @@ public class Home extends javax.swing.JFrame {
                 model.addRow(data);
             }
             sql.getHasil().close();
-            tCari.setText("");
         }
         catch(SQLException e)  {
             System.out.println(e);
@@ -734,6 +703,7 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JLabel idDisplay;
     private javax.swing.JTextField inCucian;
     private javax.swing.JTextField inIdCucian;
+    private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -745,7 +715,6 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
-    private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel15;
     private javax.swing.JPanel jPanel16;
@@ -757,7 +726,6 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JPanel lPanel;
     private javax.swing.JTextArea status;
-    private javax.swing.JTextField tCari;
     private javax.swing.JPanel tPanel;
     private javax.swing.JLabel tabCucian;
     private javax.swing.JLabel tabReport;
