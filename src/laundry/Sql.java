@@ -1,5 +1,7 @@
 package laundry;
-//Fahd Erlangga
+
+//dewajumat
+
 import java.sql.*;
 
 public class Sql {
